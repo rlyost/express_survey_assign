@@ -17,17 +17,16 @@ app.get("/", function(req, res){
     res.render('index');
 });
 
-app.post('/user', function(req, res){
+app.post('/result', function(req, res){
     var user = req.session;
-    console.log("Post Data \n\n", req.body)
-    res.redirect('/results');
-})
-
-app.post("/results", function(req, res){
-
-    res.render('/results', {user: req});
+    user.name = req.body.name;
+    user.location = req.body.location;
+    user.language = req.body.language;
+    user.comment = req.body.comment;
+    console.log("Post Data \n\n", req.body);
+    res.render('results', { user: user.name, location: user.location, language: user.language, comment: user.comment });
 });
 
 app.listen(8002, function(){
     console.log('Running a new express project on port 8002');
-})
+});
