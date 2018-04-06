@@ -24,8 +24,12 @@
               
               var form_data = { 'name': $('#name').val(), 'location': $('#location').val(), 'language': $('#language').val(), 'comment': $('#comment').val() }
               console.log(form_data);
+              var user_string = "<tr id='user'><td><p>You emitted the following information to the server: " + JSON.stringify(form_data) + "</p></td></tr>";
+              console.log(user);
 
-              $('.messages').append('<tr><td><p>You emitted the following information to the server: ' + JSON.stringify(form_data) + '</p></td></tr>');
+              document.getElementById('user').innerHTML = user_string;
+
+              // $('.messages').append('<tr><td><p>You emitted the following information to the server: ' + JSON.stringify(form_data) + '</p></td></tr>');
              
               socket.emit('message', form_data);
              
@@ -36,7 +40,8 @@
             });
 
             socket.on('random_number', function (data) {
-              $('.messages').append('<tr><td><p>Your lucky number emitted by the server is ' + data + '</p></td></tr>');
+              var lucky_string = "<tr id='luck'><td><p>Your lucky number emitted by the server is " + data + "</p></td></tr>";
+              document.getElementById('luck').innerHTML = lucky_string;
             });
         });
     </script>
@@ -45,7 +50,10 @@
   </head>
   <body>
     <!-- Table for emitted message -->
-    <table class="messages table table-striped table-bordered"></table>
+    <table class="messages table table-striped table-bordered">
+      <tr id='user'></tr>
+      <tr id='luck'></tr>
+    </table>
  
     <!-- Input form for data -->
     <div class="border border-primary jumbotron w-50 p-3 ">
