@@ -14,16 +14,24 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views')); 
 
 app.get("/", function(req, res){
+    req.session.destroy();
     res.render('index');
 });
 
-app.post('/result', function(req, res){
+app.post('/user', function(req, res){
     var user = req.session;
     user.name = req.body.name;
     user.location = req.body.location;
     user.language = req.body.language;
     user.comment = req.body.comment;
+    req.session = user;
     console.log("Post Data \n\n", req.body);
+    res.redirect('/result');
+});
+
+app.get('/result', function(req, res){
+    console.log(req.session);
+    var user = req.session;
     res.render('results', { user: user.name, location: user.location, language: user.language, comment: user.comment });
 });
 
