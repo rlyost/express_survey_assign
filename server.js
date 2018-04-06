@@ -1,3 +1,4 @@
+var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -18,23 +19,33 @@ app.get("/", function(req, res){
     res.render('index');
 });
 
-app.post('/user', function(req, res){
-    var user = req.session;
-    user.name = req.body.name;
-    user.location = req.body.location;
-    user.language = req.body.language;
-    user.comment = req.body.comment;
-    req.session = user;
-    console.log("Post Data \n\n", req.body);
-    res.redirect('/result');
-});
+// app.post('/user', function(req, res){
+//     var user = req.session;
+//     user.name = req.body.name;
+//     user.location = req.body.location;
+//     user.language = req.body.language;
+//     user.comment = req.body.comment;
+//     req.session = user;
+//     console.log("Post Data \n\n", req.body);
+//     res.redirect('/result');
+// });
 
-app.get('/result', function(req, res){
-    console.log(req.session);
-    var user = req.session;
-    res.render('results', { user: user.name, location: user.location, language: user.language, comment: user.comment });
-});
+// app.get('/result', function(req, res){
+//     console.log(req.session);
+//     var user = req.session;
+//     res.render('results', { user: user.name, location: user.location, language: user.language, comment: user.comment });
+// });
 
-app.listen(8002, function(){
-    console.log('Running a new express project on port 8002');
+var server = app.listen(8000, function() {
+    console.log("listening on port 8000");
 });
+var io = require('socket.io').listen(server);
+io.sockets.on('connection', function (socket) {
+    console.log("Client/socket is connected!");
+    console.log("Client/socket id is: ", socket.id);
+    // all the server socket code goes in here
+    socket.on("message", function (data){
+        var lucky = Math.floor(Math.random() * 1000) + 1;
+        socket.emit('random_number', lucky);
+    })
+})
